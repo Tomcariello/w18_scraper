@@ -1,0 +1,20 @@
+{
+  "name": "w18_scraper",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Tomcariello/w18_scraper.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Tomcariello/w18_scraper/issues"
+  },
+  "homepage": "https://github.com/Tomcariello/w18_scraper#readme"
+}
