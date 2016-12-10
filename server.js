@@ -142,7 +142,10 @@ app.post('/articles/:id', function(req, res){
 			console.log(err);
 		}	else {
 			// using the Article id find the matching Article in our db & update (replace) it
-			Article.findOneAndUpdate({'_id': req.params.id}, {'note':doc._id})
+			// Article.findOneAndUpdate({'_id': req.params.id}, {'note':doc._id})
+
+      Article.findOneAndUpdate({}, {$push: {'Notes': doc._id}}, {new: true})
+
 			// execute the above query
 			.exec(function(err, doc){
 				if (err){
