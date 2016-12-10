@@ -1,18 +1,28 @@
 # w18_scraper
 
+
+12/04/2016
+Created file structure & configured Cheerio to scrape Mother Jones
+
+12/09/2016
+Fixed package.json
+enabled logic to ignore titles that are already in the database
+adjusted routes/links so the user experience is single page
+
+
+*****Instructions*****
+
+
 # Week 18 Homework Assignment - All the News That's Fit to Scrape
 
 ### Overview
 
-In this assignment, you'll create a web app that lets users leave comments on the latest news. But you're not going to actually write any articles; instead, you'll flex your Mongoose and Cheerio muscles to scrape news from another site.
-
-### Remember
-
-* You will be fully capable of doing this homework by the end of Saturday's class.
-
+Create a web app that lets users leave comments on the latest news. 
+But you're not going to actually write any articles; instead, scrape news from another site.
 
 ### Before You Begin
-1. Create a GitHub repo for this assignment and clone it to your computer. Any name will do -- just make sure it's related to this project in some fashion.
+1. Create a GitHub repo for this assignment and clone it to your computer. 
+   Any name will do -- just make sure it's related to this project in some fashion.
 
 2. Run `npm init`. When that's finished, install and save these npm packages:
   * express
@@ -21,9 +31,10 @@ In this assignment, you'll create a web app that lets users leave comments on th
   * body-parser
   * cheerio
   * request
-  * **NOTE**: If you want to earn complete credit for your work, you must use all six of these packages in your assignment.
+  * **NOTE**: If you want to earn complete credit for your work, you must use all 6 of these packages in your assignment.
 
-3. In order to deploy your project to Heroku, you must set up an mLab provision. mLab is remote MongoDB database that Heroku supports natively. Follow these steps to get it running:
+3. In order to deploy your project to Heroku, you must set up an mLab provision. 
+  mLab is remote MongoDB database that Heroku supports natively. Follow these steps to get it running:
   1. Create a Heroku app in your project directory. 
   2. Run this command in your Terminal/Bash window: 
     * `heroku addons:create mongolab`
@@ -40,31 +51,22 @@ In this assignment, you'll create a web app that lets users leave comments on th
 ## Instructions
 * Create an app that follows this user story:
 
-  1. Whenever a user visits your site, the app will scrape stories from a news outlet of your choice. The data should at least include a link to the story and a headline, but feel free to add more content to your database (photos, bylines, and so on).
-    * Use Cheerio to grab the site content and Mongoose to save it to your MongoDB database. 
+  1. Scrape stories from a news outlet. The data should at least include a link to the story & a headline, 
+      but feel free to add more content to your database. Use Cheerio to grab the content & Mongoose to save it 
+      to your MongoDB database. 
 
-  2. All users can leave comments on the stories you collect. They should also be allowed to delete whatever comments they want removed. All stored comments should be visible to every user.
-    * You'll need to use Mongoose's model system to associate comments with particular articles. 
+  2. All users can leave comments on the stories you collect. They can also delete whatever comments they want removed. 
+     Stored comments should be visible to all users. 
+     Use Mongoose's model system to associate comments with particular articles. 
 
 ### Tips
-* Go back to Saturday's activities if you need a refresher on how to partner one model with another.
+* Make sure an article isn't already represented in your database before saving it; we don't want duplicates. 
 
-* Whenever you scrape a site for stories, make sure an article isn't already represented in your database before saving it; we don't want duplicates. 
-
-* Don't just clear out your database and populate it with scraped articles whenever a user accesses your site. 
+* Don't just clear out your database & populate it with scraped articles whenever a user accesses your site. 
   * If your app deletes stories every time someone visits, your users won't be able to see any comments except the ones that they post.
 
 ### Helpful Links
+
 * [MongoDB Documentation](https://docs.mongodb.com/manual/)
 * [Mongoose Documentation](http://mongoosejs.com/docs/api.html)
 * [Cheerio Documentation](https://github.com/cheeriojs/cheerio)
-
--------
-
-### One Last Thing
-Like always, contact either the instructor or one of your TAs for support if you find yourself stuck while working on this assignment. That goes threefold for this week: MongoDB and Mongoose compose a challenging data management system. If there's anything you find confusing about these technologies, don't hesitate to speak with someone from the Bootcamp team.
-
-**Good Luck!**
-
-## Copyright
-Coding Boot Camp (C) 2016. All Rights Reserved.

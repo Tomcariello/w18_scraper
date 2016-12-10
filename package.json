@@ -1,10 +1,11 @@
 {
   "name": "w18_scraper",
   "version": "1.0.0",
-  "description": "",
+  "description": "Create a web app that lets users leave comments on the latest news. \r But you're not going to actually write any articles; instead, scrape news from another site.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
   },
   "repository": {
     "type": "git",
@@ -16,5 +17,16 @@
   "bugs": {
     "url": "https://github.com/Tomcariello/w18_scraper/issues"
   },
-  "homepage": "https://github.com/Tomcariello/w18_scraper#readme"
+  "homepage": "https://github.com/Tomcariello/w18_scraper#readme",
+  "dependencies": {
+    "body-parser": "^1.15.2",
+    "cheerio": "^0.22.0",
+    "expres": "^0.0.5",
+    "express-handlebars": "^3.0.0",
+    "express": "^4.14.0",
+    "mongoose": "^4.7.2",
+    "morgan": "^1.7.0",
+    "request": "^2.79.0"
+  },
+  "devDependencies": {}
 }

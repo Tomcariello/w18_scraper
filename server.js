@@ -32,15 +32,12 @@ db.once('open', function() {
   console.log('Mongoose connection successful.');
 });
 
-
 //Note is the schema used to save the comments left by the users
 var Note = require('./models/Note.js');
 //Article is the schema used to save the Article info found by the scraper
 var Article = require('./models/Article.js');
 
-
 // Routes
-
 app.get('/', function(req, res) {
   res.send(index.html);
 });
@@ -48,32 +45,59 @@ app.get('/', function(req, res) {
 // A GET request to scrape the motherjones website.
 app.get('/scrape', function(req, res) {
   request('http://www.motherjones.com//', function(error, response, html) {
+
   	// then, we load that into cheerio and save it to $ for a shorthand selector
     var $ = cheerio.load(html);
-    // now, we grab every h3 within an span tag
-    $('span h3').each(function(i, element) {
+    //Create a variable to hold the titles that are already in the database
+    var allTitles = [];
+
+    //pull current database of titles and push them into the array
+    Article.find({}, function(err, doc) {
+      for (i=0; i < doc.length; i++) {
+        allTitles.push(doc[i].title);
+      }
+
+      //Pull every span < h3 from the scraped data
+      $('span h3').each(function(i, element) {
+        //Create an empty object to use to pass the scraped data into the database
 				var result = {};
+        //Set boolean variable to track if a title is already in the database
+        var alreadyInDatabase = false;
 
-				// add the text and href of every link & save them as properties of the result obj
-				result.title = $(this).children('a').text();
-				result.link = "http://www.motherjones.com/" + $(this).children('a').attr('href');
+        //Pull the title out of the current instance
+        result.title = $(this).children('a').text();
 
-				//save scraped object info into entry
-				var entry = new Article (result);
+        //check if this title is already in the database
+        for (j=0; j < allTitles.length; j++) {
+          if (result.title == allTitles[j]){
+            // console.log(result.title + " | " + allTitles[j]);
+            // console.log('already in the db. Punch out');
+            alreadyInDatabase = true;
+            }
+        }
 
-				//save entry to the db
-				entry.save(function(err, doc) {
-				  if (err) {
-				    console.log(err);
-				  } 
-				  else {
-				    // console.log(doc);
-				  }
-				});
-    });
+        //Do this is the article title is not already in the database
+        if (alreadyInDatabase == false) {
+
+  				// set the url to the object previously created
+  				result.link = "http://www.motherjones.com/" + $(this).children('a').attr('href');
+
+  				//save scraped data object into variable
+  				var entry = new Article (result);
+
+  				//save data to the db
+  				entry.save(function(err, doc) {
+  				  if (err) {
+  				    console.log(err);
+  				  } 
+  				  else {
+  				  }
+  				});
+        }
+      });
+    })
+    res.redirect("/");
   });
-  // tell the browser that we finished scraping the text.
-  res.send("Scrape Complete");
 });
 
 // this will get the articles we scraped from mongoDB
