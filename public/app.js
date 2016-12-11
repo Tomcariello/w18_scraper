@@ -15,12 +15,12 @@ $.getJSON('/articles', function(data) {
 
 // whenever someone clicks a link
 $(document).on('click', 'p', function(){
-  // empty the notes from the note section of any previously loaded notes
+  // empty the (new) notes from the note section of any previously loaded notes
   $('#notes').empty();
   // save the id from the p tag
   var thisId = $(this).attr('data-id');
 
-  // now make an ajax call for the Article
+  // now make an ajax call for the Article information to populate labels in the notes field
   $.ajax({
     method: "GET",
     url: "/articles/" + thisId,
@@ -31,11 +31,21 @@ $(document).on('click', 'p', function(){
       $('#notes').append('<textarea id="bodyinput" name="body"></textarea>'); 
       $('#notes').append('<button data-id="' + data._id + '" id="savenote">Save Note</button>');
 
-      // if there's a note for this article, load that note
-      if(data.note){
-        $('#titleinput').val(data.note.title);
-        $('#bodyinput').val(data.note.body);
-      }
+
+      //MAKE AJAX CALL FOR NOTES
+      $.ajax({
+        method: "GET",
+        url: "/notes/" + thisId,
+      })
+        .done(function( notedata ) {
+          for (var i = 0; i < notedata.length; i++) {
+            //Add code to parse the data once it is returning properly
+            $('#usernotes').append('<h2>' + notedata[i].title + '</h2>'); 
+            $('#usernotes').append('<h2>' + notedata[i].body + '</h2>'); 
+          }
+        })
+
+
     });
 });
 
@@ -43,7 +53,7 @@ $(document).on('click', 'p', function(){
 $(document).on('click', '#savenote', function(){
   var thisId = $(this).attr('data-id');
 
-  // run a POST request to change the note, using what's entered in the inputs
+  // run a POST request to create a new note using what's entered in the inputs
   $.ajax({
     method: "POST",
     url: "/articles/" + thisId,
@@ -53,8 +63,8 @@ $(document).on('click', '#savenote', function(){
     }
   })
     .done(function( data ) {
-      console.log(data);
-      $('#notes').empty();
+      // console.log(data);
+      // $('#notes').empty();
     });
 
   $('#titleinput').val("");

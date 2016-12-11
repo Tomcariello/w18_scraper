@@ -117,9 +117,10 @@ app.get('/articles', function(req, res){
 
 // grab an article by it's ObjectId
 app.get('/articles/:id', function(req, res){
+  //find article by it's ID
 	Article.findOne({'_id': req.params.id})
 	// and populate all of the notes associated with it.
-	.populate('note')
+	.populate('notes')
 	// now, execute our query
 	.exec(function(err, doc){
 		// log any errors
@@ -131,8 +132,27 @@ app.get('/articles/:id', function(req, res){
 	});
 });
 
-// replace the existing note of an article with a new one
-// or if no note exists for an article, make the posted note it's note.
+// grab all of the notes associated with an article
+app.get('/notes/:id', function(req, res){
+  //find article by it's ID
+  console.log(req.params.id);
+  
+  // Note.find({'_id': req.params.id})
+
+  //Get this to find only the notes for this particular article
+  Note.find({})
+  .exec(function(err, doc){
+    // log any errors
+    if (err){
+      console.log(err);
+    } else {
+      console.log(doc);
+      res.json(doc);
+    }
+  });
+});
+
+// make the posted note a new note.
 app.post('/articles/:id', function(req, res){
 	// create a new note and pass the req.body to the entry.
 	var newNote = new Note(req.body);
@@ -141,9 +161,7 @@ app.post('/articles/:id', function(req, res){
 		if(err){
 			console.log(err);
 		}	else {
-			// using the Article id find the matching Article in our db & update (replace) it
-			// Article.findOneAndUpdate({'_id': req.params.id}, {'note':doc._id})
-
+			// using the Article id find the matching Article in our db & add it
       Article.findOneAndUpdate({}, {$push: {'Notes': doc._id}}, {new: true})
 
 			// execute the above query
