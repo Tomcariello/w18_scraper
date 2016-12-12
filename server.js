@@ -115,12 +115,12 @@ app.get('/articles', function(req, res){
 	});
 });
 
-// grab an article by it's ObjectId
+//grab an article by it's ObjectId
 app.get('/articles/:id', function(req, res){
   //find article by it's ID
 	Article.findOne({'_id': req.params.id})
 	// and populate all of the notes associated with it.
-	.populate('notes')
+	.populate('Notes')
 	// now, execute our query
 	.exec(function(err, doc){
 		// log any errors
@@ -134,13 +134,8 @@ app.get('/articles/:id', function(req, res){
 
 // grab all of the notes associated with an article
 app.get('/notes/:id', function(req, res){
-  //find article by it's ID
-  console.log(req.params.id);
-  
-  // Note.find({'_id': req.params.id})
-
-  //Get this to find only the notes for this particular article
-  Note.find({})
+  Article.findOne({'_id': req.params.id})
+  .populate('Note')
   .exec(function(err, doc){
     // log any errors
     if (err){
@@ -162,7 +157,7 @@ app.post('/articles/:id', function(req, res){
 			console.log(err);
 		}	else {
 			// using the Article id find the matching Article in our db & add it
-      Article.findOneAndUpdate({}, {$push: {'Notes': doc._id}}, {new: true})
+      Article.findOneAndUpdate({'_id': req.params.id}, {$push: {'Notes': doc._id}}, {new: true})
 
 			// execute the above query
 			.exec(function(err, doc){
