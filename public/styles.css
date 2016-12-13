@@ -30,3 +30,8 @@ textarea{
   height:200px;
   font-size: 18px;
 }
+
+#usernotes {
+  border-top: 1px solid black;
+  border-bottom: 1px solid black;
+}

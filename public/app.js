@@ -15,39 +15,33 @@ $.getJSON('/articles', function(data) {
 
 // whenever someone clicks a link
 $(document).on('click', 'p', function(){
-  // empty the (new) notes from the note section of any previously loaded notes
+  // empty the (new) note form
   $('#notes').empty();
   // save the id from the p tag
   var thisId = $(this).attr('data-id');
 
-  // now make an ajax call for the Article information to populate labels in the notes field
+  // now make an ajax call for the Article information to populate notes field
   $.ajax({
     method: "GET",
     url: "/articles/" + thisId,
   })
-    .done(function( data ) {
-      $('#notes').append('<h2>' + data.title + '</h2>'); 
-      $('#notes').append('<input id="titleinput" name="title" >'); 
-      $('#notes').append('<textarea id="bodyinput" name="body"></textarea>'); 
-      $('#notes').append('<button data-id="' + data._id + '" id="savenote">Save Note</button>');
+  .done(function( data ) {
+    //Clear the notes form
+    $('#notes').append('<h2>' + data.title + '</h2>'); 
+    $('#notes').append('<input id="titleinput" name="title" >'); 
+    $('#notes').append('<textarea id="bodyinput" name="body"></textarea>'); 
+    $('#notes').append('<button data-id="' + data._id + '" id="savenote">Save Note</button>');
 
-
-      //MAKE AJAX CALL FOR NOTES
-      $.ajax({
-        method: "GET",
-        url: "/notes/" + thisId,
-      })
-        .done(function( notedata ) {
-          for (var i = 0; i < notedata.length; i++) {
-            //Add code to parse the data once it is returning properly
-            $('#usernotes').append('<h2>' + notedata[i].title + '</h2>'); 
-            $('#usernotes').append('<h2>' + notedata[i].body + '</h2>'); 
-          }
-        })
-
-
-    });
+    //write the notes to the screen
+    for (var i = 0; i < data.Notes.length; i++) {
+      // $('#usernotes').append('<hr>');
+      $('#usernotes').append('<h3>' + data.Notes[i].title + '</h3>'); 
+      $('#usernotes').append('<p>' + data.Notes[i].body + '</p>'); 
+      $('#usernotes').append('<p id="deleteNote" data-id=' + data.Notes[i]._id + '>Delete this note.</p>'); 
+    }
+  })
 });
+
 
 // when you click the savenote button
 $(document).on('click', '#savenote', function(){
@@ -63,10 +57,27 @@ $(document).on('click', '#savenote', function(){
     }
   })
     .done(function( data ) {
-      // console.log(data);
-      // $('#notes').empty();
+      console.log(data);
     });
 
   $('#titleinput').val("");
   $('#bodyinput').val("");
+});
+
+// when you click a deleteNote class
+$(document).on('click', '#deleteNote', function(){
+  var thisId = $(this).attr('data-id');
+  // var baseURL = window.location.origin;
+  // AJAX Call to delete Comment
+  $.ajax({
+    url: "deletenote/" + thisId,
+    type: 'POST',
+  })
+  .done(function() {
+    // Refresh Window after the call is done
+    location.reload();
+  });
+  
+  // Prevent Default
+  return false;
 });

@@ -100,7 +100,7 @@ app.get('/scrape', function(req, res) {
   });
 });
 
-// this will get the articles we scraped from mongoDB
+// this will get all of the articlesfrom mongoDB on page load (from app.js)
 app.get('/articles', function(req, res){
 	// grab every doc in the Articles array
 	Article.find({}, function(err, doc){
@@ -115,7 +115,7 @@ app.get('/articles', function(req, res){
 	});
 });
 
-//grab an article by it's ObjectId
+//grab an article by it's ObjectId when a user clicks on a link
 app.get('/articles/:id', function(req, res){
   //find article by it's ID
 	Article.findOne({'_id': req.params.id})
@@ -132,21 +132,6 @@ app.get('/articles/:id', function(req, res){
 	});
 });
 
-// grab all of the notes associated with an article
-app.get('/notes/:id', function(req, res){
-  Article.findOne({'_id': req.params.id})
-  .populate('Note')
-  .exec(function(err, doc){
-    // log any errors
-    if (err){
-      console.log(err);
-    } else {
-      console.log(doc);
-      res.json(doc);
-    }
-  });
-});
-
 // make the posted note a new note.
 app.post('/articles/:id', function(req, res){
 	// create a new note and pass the req.body to the entry.
@@ -159,17 +144,37 @@ app.post('/articles/:id', function(req, res){
 			// using the Article id find the matching Article in our db & add it
       Article.findOneAndUpdate({'_id': req.params.id}, {$push: {'Notes': doc._id}}, {new: true})
 
-			// execute the above query
+			// execute the above query, writing the new note to the database
 			.exec(function(err, doc){
 				if (err){
 					console.log(err);
 				} else {
-					res.send(doc);
+          //redirect user to the articles get route to re-render the page
+          //The latest note is written to the DB but not to the screen
+          var targetRoute = "/articles/" + req.params.id;
+          res.redirect(targetRoute);
 				}
 			});
 		}
 	});
+  // var targetRoute = "/articles/" + req.params.id;
+  // res.redirect(targetRoute);
 });
+
+// this will get all of the articlesfrom mongoDB on page load (from app.js)
+app.get('/deletenote/:id', function(req, res){
+  Note.findByIdAndRemove(req.params.id, function (err, todo) {  
+    if (err) {
+      console.log(err);
+    } 
+    else {
+      // Send Success Header
+      res.sendStatus(200);
+    }
+  })
+});
+
+
 
 // listen on port 3000
 app.listen(3000, function() {
