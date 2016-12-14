@@ -17,6 +17,7 @@ $.getJSON('/articles', function(data) {
 $(document).on('click', 'p', function(){
   // empty the (new) note form
   $('#notes').empty();
+  $('#usernotes').empty();
   // save the id from the p tag
   var thisId = $(this).attr('data-id');
 
@@ -71,7 +72,7 @@ $(document).on('click', '#deleteNote', function(){
   // AJAX Call to delete Comment
   $.ajax({
     url: "deletenote/" + thisId,
-    type: 'POST',
+    type: 'GET',
   })
   .done(function() {
     // Refresh Window after the call is done
